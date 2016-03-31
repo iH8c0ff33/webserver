@@ -1,0 +1,47 @@
+extends /layouts/main
+block title
+  title Sign Up
+block content
+  div(class='container')
+    div(class='card')
+      form(onsubmit='return validate();' action='/signup' method='POST')
+        div(class='card-content')
+          span(class='card-title') Sign Up
+          div(class='row')
+            div(class='input-field col s12')
+              input(type='text' name='username' id='username' length='50' required='' class='validate')
+              label(for='username') Username
+          div(class='row')
+            div(class='input-field col s6')
+              input(type='text' name='first_name' id='first_name' length='50' required='' class='validate')
+              label(for='first_name') First Name
+            div(class='input-field col s6')
+              input(type='text' name='last_name' id='last_name' length='50' required='' class='validate')
+              label(for='last_name') Last Name
+          div(class='row')
+            div(class='input-field col s12')
+              input(type='email' name='email' id='email' length='255' required='' class='validate')
+              label(for='email') Email
+          div(class='row')
+            div(class='input-field col s12')
+              input(type='password' name='password' id='password' length='255' required ='' class='validate')
+              label(for='password') Password
+          unless error == ''
+            ul(class='collection')
+              each val in error
+                li(class='collection-item red-text')= val
+        div(class='card-action')
+          button(class='btn validate' type='submit') Sign Up
+block pagescript
+  script.
+    function validate() {
+      var username = $('#username').val();
+      var first_name = $('#first_name').val();
+      var last_name = $('#last_name').val();
+      var email = $('#email').val();
+      var password = $('#password').val();
+      var error = false;
+      if (username.length > 50 || first_name.length > 50 || last_name.legth > 50 || email.length > 255 || password.length > 255) {
+        return false;
+      }
+    }
