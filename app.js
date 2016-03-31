@@ -43,6 +43,6 @@ passport.serializeUser(require(__dirname+'/strategies/serializeUser.js'));
 passport.deserializeUser(require(__dirname+'/strategies/deserializeUser.js')(User));
 // Routes
 app.use('/', require(__dirname+'/routes/index.js')(passport));
-app.use('/manage', require(__dirname+'/routes/manage.js'));
+app.use('/manage', require(__dirname+'/routes/manage.js')(User, Group, Permission));
 // Espress server
 app.listen(2765);
