@@ -36,7 +36,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 passport.use('local-signup', require(__dirname+'/strategies/local-signup.js')(User));
-passport.use('local-signin', require(__dirname+'/strategies/local-login.js')(User));
+passport.use('local-login', require(__dirname+'/strategies/local-login.js')(User));
 passport.serializeUser(require(__dirname+'/strategies/serializeUser.js'));
 passport.deserializeUser(require(__dirname+'/strategies/deserializeUser.js')(User));
 // Routes
