@@ -15,7 +15,7 @@ block content
             div(class='input-field col s12')
               input(type='password' name='password' id='password' required='' class='validate')
               label(for='password') Password
-          unless error = ''
+          unless error == ''
             ul(class='collection')
               each val in error
                 li(class='collection-item red-text')= val
