@@ -15,26 +15,35 @@ block content
     div#users
       div.row
         div.card.col.s12
-          table.responsive-table
-            thead
-              tr
-                th Username
-                th First Name
-                th Last Name
-                th Email
-                th Created At
-                th Reset Password
-                th Delete
-            tbody
-              each val in users
-                tr
-                  td: a(href='/manage/user/#{val.username}')= val.username
-                  td= val.firstName
-                  td= val.lastName
-                  td: a(href='mailto:#{val.email}').green-text= val.email
-                  td= val.createdAt
-                  td: a(href='/manage/reset/#{val.username}').orange-text RESET
-                  td: a(href='/manage/delete/#{val.username}').red-text DELETE
+          div.card-content
+            span.card-title Users List
+            div.row
+              table.responsive-table.col.s12
+                thead
+                  tr
+                    th Username
+                    th First Name
+                    th Last Name
+                    th Email
+                    th Reset Password
+                    th Delete
+                tbody
+                  each val in users
+                    tr
+                      td: a(href='/manage/user/#{val.username}')= val.username
+                      td= val.firstName
+                      td= val.lastName
+                      td: a(href='mailto:#{val.email}').green-text.truncate= val.email
+                      td: a(href='/manage/reset/#{val.username}').orange-text RESET
+                      td: a(href='javascript:void(0)' onclick='deleteUser("#{val.username}")').red-text DELETE
+              unless userMessage == ''
+                ul.collection
+                  each val in userMessage
+                    li.collection-item= val
+              unless userError == ''
+                ul.collection
+                  each val in userError
+                    li.collection-item.red-text= val
     div#groups
       div.row
         div.card.col.s12
@@ -54,7 +63,7 @@ block content
               span.card-title New Group
               div.row
                 div.input-field.col.s12.l6
-                  input#groupName.validate(type='text' name='groupName' required)
+                  input#groupName.validate(type='text' name='groupName' required oninput='validateForm()')
                   label(for='groupName') Name
                 div.input-field.col.s12.l6
                   input#groupDescription.validate(type='text' name='groupDescription' required)
@@ -63,12 +72,18 @@ block content
                   ul.collection
                     each val in groupMessage
                       li.collection-item= val
+                unless groupError == ''
+                  ul.collection
+                    each val in groupError
+                      li.collection-item.red-text= val
             div.card-action
               button.btn(type='submit') Create Group
     div#permissions
       |permissions
 block pagescript
   script.
-    function setAction() {
-      $('#newGroupForm').attr('action', '/manage/group/'+$('#groupName').val()+'?new=true');
+    function setAction(){$("#newGroupForm").attr("action","/manage/group/"+$("#groupName").val()+"?new=true")}function validateForm(){$("#groupName").val().match(/[^\w]/g)&&Materialize.toast("Group Name must match \\w",4000);$("#groupName").val($("#groupName").val().replace(/[^\w]/g,""))};
+    function deleteUser(username) {
+      var $toastMessage = $('<span><a href="/manage/user/'+username+'/delete?redirectTo=/manage#users" class="red-text">Delete</a> user: '+username+'</span>');
+      Materialize.toast($toastMessage, 5000);
     }
