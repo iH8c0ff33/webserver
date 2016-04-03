@@ -6,7 +6,9 @@ var session = require('express-session');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var flash = require('express-flash');
 var passport = require('passport');
+var favicon = require('serve-favicon');
 var app = express();
+app.use(favicon(__dirname+'/public/favicon.ico'));
 app.locals.basedir = __dirname+'/views';
 // Postgres connection
 var Sequelize = require('sequelize');
@@ -41,5 +43,6 @@ passport.serializeUser(require(__dirname+'/strategies/serializeUser.js'));
 passport.deserializeUser(require(__dirname+'/strategies/deserializeUser.js')(User));
 // Routes
 app.use('/', require(__dirname+'/routes/index.js')(passport));
+app.use('/manage', require(__dirname+'/routes/manage.js')(User, Group, Permission));
 // Espress server
 app.listen(2765);
