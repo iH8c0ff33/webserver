@@ -47,15 +47,18 @@ block content
     div#groups
       div.row
         div.card.col.s12
-          table.responsive-table
-            thead: tr
-              th Group Name
-              th Group Description
-            tbody
-              each val in groups
-                tr
-                  td: a(href='/manage/group/#{val.groupName}')= val.groupName
-                  td= val.groupDescription
+          div.card-content
+            span.card-title Groups List
+            div.row
+              table.responsive-table.col.s12
+                thead: tr
+                  th Group Name
+                  th Group Description
+                tbody
+                  each val in groups
+                    tr
+                      td: a(href='/manage/group/#{val.groupName}')= val.groupName
+                      td= val.groupDescription
       div.row
         div.card.col.s12
           form#newGroupForm(action='' method='POST' onsubmit='setAction()')
