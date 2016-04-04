@@ -18,7 +18,7 @@ block content
           div.card-content
             span.card-title Users List
             div.row
-              table.responsive-table.col.s12
+              table.responsive-table.highlight.col.s12
                 thead
                   tr
                     th Username
@@ -36,11 +36,13 @@ block content
                       td: a(href='mailto:#{val.email}').green-text.truncate= val.email
                       td: a(href='/manage/reset/#{val.username}').orange-text RESET
                       td: a(href='javascript:void(0)' onclick='deleteUser("#{val.username}")').red-text DELETE
-              unless userMessage == ''
+            unless userMessage == ''
+              div.row
                 ul.collection
                   each val in userMessage
                     li.collection-item= val
-              unless userError == ''
+            unless userError == ''
+              div.row
                 ul.collection
                   each val in userError
                     li.collection-item.red-text= val
@@ -50,15 +52,27 @@ block content
           div.card-content
             span.card-title Groups List
             div.row
-              table.responsive-table.col.s12
+              table.responsive-table.highlight.col.s12
                 thead: tr
                   th Group Name
                   th Group Description
+                  th Delete
                 tbody
                   each val in groups
                     tr
                       td: a(href='/manage/group/#{val.groupName}')= val.groupName
                       td= val.groupDescription
+                      td: a(href='javascript:void(0)' onclick='deleteGroup("#{val.groupName}")').red-text DELETE
+            unless groupMessage == ''
+              div.row
+                ul.collection
+                  each val in groupMessage
+                    li.collection-item= val
+            unless groupError == ''
+              div.row
+                ul.collection
+                  each val in groupError
+                    li.collection-item.red-text= val
       div.row
         div.card.col.s12
           form#newGroupForm(action='' method='POST' onsubmit='setAction()')
@@ -71,22 +85,53 @@ block content
                 div.input-field.col.s12.l6
                   input#groupDescription.validate(type='text' name='groupDescription' required)
                   label(for='groupDescription') Description
-                unless groupMessage == ''
-                  ul.collection
-                    each val in groupMessage
-                      li.collection-item= val
-                unless groupError == ''
-                  ul.collection
-                    each val in groupError
-                      li.collection-item.red-text= val
             div.card-action
               button.btn(type='submit') Create Group
     div#permissions
-      |permissions
+      div.row
+        div.card.col.s12
+          div.card-content
+            span.card-title Permissions List
+            div.row
+              table.responsive-table.highlight.col.s12
+                thead: tr
+                  th Permission
+                  th Delete
+                tbody
+                  each val in permissions
+                    tr
+                      td: a(href='javascript:void(0)')= val.permDescription
+                      td: a(href='javascript:void(0)' onclick='deletePerm("#{val.permDescription}")').red-text DELETE
+            unless permError == ''
+              div.row
+                ul.collection
+                  each val in permError
+                    li.collection-item.red-text= val
+      div.row
+        div.card.col.s12
+          form#newPermForm(action='' method='POST' onsubmit='setPermAction()')
+            div.card-content
+              span.card-title New Permission
+              div.row
+                div.input-field.col.s12
+                  input#permDescription.validate(type='text' name='permDescription' required oninput='validatePermForm()')
+                  label(for='permDescription') Permission
+            div.card-action
+              button.btn(type='submit') Create Permission
 block pagescript
   script.
-    function setAction(){$("#newGroupForm").attr("action","/manage/group/"+$("#groupName").val()+"?new=true")}function validateForm(){$("#groupName").val().match(/[^\w]/g)&&Materialize.toast("Group Name must match \\w",4000);$("#groupName").val($("#groupName").val().replace(/[^\w]/g,""))};
-    function deleteUser(username) {
-      var $toastMessage = $('<span><a href="/manage/user/'+username+'/delete?redirectTo=/manage#users" class="red-text">Delete</a> user: '+username+'</span>');
-      Materialize.toast($toastMessage, 5000);
+    function setAction(){$("#newGroupForm").attr("action","/manage/group/"+$("#groupName").val()+"?new=true")}function validateForm(){$("#groupName").val().match(/[^\w]/g)&&Materialize.toast("Group Name must match \\w",4E3);$("#groupName").val($("#groupName").val().replace(/[^\w]/g,""))}function deleteUser(a){a=$('<span><a href="/manage/user/'+a+'/delete?redirectTo=/manage#users" class="red-text">Delete</a> user: '+a+"</span>");Materialize.toast(a,5E3)}
+    function deleteGroup(a){a=$('<span><a href="/manage/group/'+a+'/delete?redirectTo=/manage#groups" class="red-text">Delete</a> group: '+a+"</span>");Materialize.toast(a,5E3)};
+    function setPermAction() {
+      $('#newPermForm').attr('action', '/manage/permission/'+$('#permDescription').val());
+    }
+    function validatePermForm() {
+      if ($('#permDescription').val().match(/[^\w]/g)) {
+        Materialize.toast('Permission must match \\w', 4000);
+      }
+      $('#permDescription').val($('#permDescription').val().replace(/[^\w]/g, ''));
+    }
+    function deletePerm(perm) {
+      var $toastContent = $('<span><a href="/manage/permission/'+perm+'/delete?redirectTo=/manage#permissions" class="red-text">Delete</a> permission '+perm+'</span>');
+      Materialize.toast($toastContent, 5000);
     }

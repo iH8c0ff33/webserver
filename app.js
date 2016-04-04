@@ -25,6 +25,7 @@ Group.belongsToMany(Permission, {through: 'GroupPermission'});
 Permission.belongsToMany(Group, {through: 'GroupPermission'});
 User.belongsToMany(Permission, {through: 'UserPermission'});
 Permission.belongsToMany(User, {through: 'UserPermission'});
+db.sync();
 // Express configuration
 app.set('views', __dirname+'/views');
 app.set('view engine', 'jade');
