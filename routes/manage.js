@@ -38,15 +38,19 @@ module.exports = function (User, Group, Permission) {
     Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
       if (!foundGroup) {return res.send('not found');}
       Permission.findAll().then(function (foundPerms) {
+        var permissions = foundPerms.map(function (item) {return item.permDescription;});
         foundGroup.getPermissions().then(function (groupPermissions) {
-          var permissions = foundPerms.map(function (item) {return item.permDescription;});
           var groupPerms = groupPermissions.map(function (item) {return item.permDescription;});
-          return res.render('manage/group', {
-            groupName: foundGroup.groupName,
-            groupDescription: foundGroup.groupDescription,
-            permissions: permissions,
-            groupPermissions: groupPerms
-          });
+          foundGroup.getUsers().then(function (foundUsers) {
+            var groupUsers = foundUsers.map(function (item) {return item.username;});
+            return res.render('manage/group', {
+              groupName: foundGroup.groupName,
+              groupDescription: foundGroup.groupDescription,
+              permissions: permissions,
+              groupPermissions: groupPerms,
+              groupUsers: groupUsers
+            });
+          }, function (err) {return next(err);});
         }, function (err) {return next(err);});
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
