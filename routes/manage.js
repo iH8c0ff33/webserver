@@ -2,7 +2,7 @@
 var router = require('express').Router();
 var Promise = require('sequelize').Promise;
 module.exports = function (User, Group, Permission) {
-  router.get('/', function (req, res) {
+  router.get('/', function (req, res, next) {
     User.findAll().then(function (foundUsers) {
       Group.findAll().then(function (foundGroups) {
         Permission.findAll().then(function (foundPerms) {
@@ -32,7 +32,7 @@ module.exports = function (User, Group, Permission) {
         req.flash('user-message', 'User '+req.params.username+' deleted');
         return res.redirect(req.query.redirectTo);
       });
-    }, function (err) {return next(err);})
+    }, function (err) {return next(err);});
   });
   router.get('/group/:groupName', function (req, res, next) {
     Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
@@ -58,7 +58,7 @@ module.exports = function (User, Group, Permission) {
         });
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
-  })
+  });
   router.post('/group/:groupName', function (req, res, next) {
     if (req.query.new) {
       if (req.body.groupName.match(/[^\w]/g)) {
@@ -85,14 +85,14 @@ module.exports = function (User, Group, Permission) {
         // permissions
         if (!req.body.permissions) {updates.push(foundGroup.setPermissions([]));} else {
           var updatePermissions = [];
-          if (typeof(req.body.permissions) == 'string') {var permissions = [req.body.permissions];} else {var permissions = req.body.permissions;}
+          if (typeof(req.body.permissions) == 'string') {var permissions = [req.body.permissions];} else {permissions = req.body.permissions;}
           permissions.forEach(function(permission) {updatePermissions.push(Permission.findOne({where: {permDescription: permission}}));});
           updates.push(Promise.all(updatePermissions).then(function (permissionsToUpdate) {return foundGroup.setPermissions(permissionsToUpdate);}));
         }
         // users
         if (!req.body.users) {updates.push(foundGroup.setUsers([]));} else {
           var updateUsers = [];
-          if (typeof(req.body.users) == 'string') {var users = [req.body.users];} else {var users = req.body.users;}
+          if (typeof(req.body.users) == 'string') {var users = [req.body.users];} else {users = req.body.users;}
           users.forEach(function (user) {updateUsers.push(User.findOne({where: {username: user}}));});
           updates.push(Promise.all(updateUsers).then(function (usersToUpdate) {return foundGroup.setUsers(usersToUpdate);}));
         }
@@ -119,7 +119,7 @@ module.exports = function (User, Group, Permission) {
         req.flash('group-message', 'Group '+req.params.groupName+' deleted');
         return res.redirect(req.query.redirectTo);
       });
-    }, function (err) {return next(err);})
+    }, function (err) {return next(err);});
   });
   router.post('/permission/:name', function (req, res, next) {
     Permission.find({where: {permDescription: req.body.permDescription}}).then(function (foundPerm) {
@@ -127,7 +127,7 @@ module.exports = function (User, Group, Permission) {
         req.flash('permission-error', 'Permission '+req.body.permDescription+' already exists');
         return res.redirect('/manage#permissions');
       }
-      Permission.create({permDescription: req.body.permDescription}).then(function (createdPerm) {
+      Permission.create({permDescription: req.body.permDescription}).then(function () {
         return res.redirect('/manage#permissions');
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
