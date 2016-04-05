@@ -41,15 +41,19 @@ module.exports = function (User, Group, Permission) {
         var permissions = foundPerms.map(function (item) {return item.permDescription;});
         foundGroup.getPermissions().then(function (groupPermissions) {
           var groupPerms = groupPermissions.map(function (item) {return item.permDescription;});
-          foundGroup.getUsers().then(function (foundUsers) {
-            var groupUsers = foundUsers.map(function (item) {return item.username;});
-            return res.render('manage/group', {
-              groupName: foundGroup.groupName,
-              groupDescription: foundGroup.groupDescription,
-              permissions: permissions,
-              groupPermissions: groupPerms,
-              groupUsers: groupUsers
-            });
+          User.findAll().then(function (foundAllUsers) {
+            var users = foundAllUsers.map(function (item) {return item.username;});
+            foundGroup.getUsers().then(function (foundUsers) {
+              var groupUsers = foundUsers.map(function (item) {return item.username;});
+              return res.render('manage/group', {
+                groupName: foundGroup.groupName,
+                groupDescription: foundGroup.groupDescription,
+                permissions: permissions,
+                groupPermissions: groupPerms,
+                users: users,
+                groupUsers: groupUsers
+              });
+          });
           }, function (err) {return next(err);});
         }, function (err) {return next(err);});
       }, function (err) {return next(err);});
@@ -76,29 +80,30 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     } else {
       Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
-        var waitFor = [];
-        if (!req.body.permissions) {
-          foundGroup.update({
-            groupName: req.body.groupName,
-            groupDescription: req.body.groupDescription
-          }).then(function (updatedGroup) {
-            updatedGroup.setPermissions([]).then(function () {
-              return res.redirect('/manage/group/'+updatedGroup.groupName);
-            }, function (err) {return next(err);});
-          }, function (err) {return next(err);});
+        var updates = [];
+        // permissions
+        if (!req.body.permissions) {updates.push(foundGroup.setPermissions([]));} else {
+          var updatePermissions = [];
+          if (typeof(req.body.permissions) == 'string') {var permissions = [req.body.permissions];} else {var permissions = req.body.permissions;}
+          permissions.forEach(function(permission) {updatePermissions.push(Permission.findOne({where: {permDescription: permission}}));});
+          updates.push(Promise.all(updatePermissions).then(function (permissionsToUpdate) {return foundGroup.setPermissions(permissionsToUpdate);}));
         }
-        if (typeof(req.body.permissions) == 'string') {var permissions = [req.body.permissions];} else {var permissions = req.body.permissions;}
-        permissions.forEach(function (value) {waitFor.push(Permission.findOne({where: {permDescription: value}}));});
-        Promise.all(waitFor).then(function (setPermissions) {
+        // users
+        if (!req.body.users) {updates.push(foundGroup.setUsers([]));} else {
+          var updateUsers = [];
+          if (typeof(req.body.users) == 'string') {var users = [req.body.users];} else {var users = req.body.users;}
+          users.forEach(function (user) {updateUsers.push(User.findOne({where: {username: user}}));});
+          updates.push(Promise.all(updateUsers).then(function (usersToUpdate) {return foundGroup.setUsers(usersToUpdate);}));
+        }
+        // group
+        Promise.all(updates).then(function () {
           foundGroup.update({
             groupName: req.body.groupName,
             groupDescription: req.body.groupDescription
           }).then(function (updatedGroup) {
-            updatedGroup.setPermissions(setPermissions).then(function () {
-              return res.redirect('/manage/group/'+updatedGroup.groupName);
-            }, function (err) {return next(err);});
+            return res.redirect('/manage/group/'+updatedGroup.groupName);
           }, function (err) {return next(err);});
-        });
+        }, function (err) {return next(err);});
       }, function (err) {return next(err);});
     }
   });
