@@ -37,25 +37,25 @@ module.exports = function (User, Group, Permission) {
   router.get('/group/:groupName', function (req, res, next) {
     Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
       if (!foundGroup) {return res.send('not found');}
-      Permission.findAll().then(function (foundPerms) {
-        var permissions = foundPerms.map(function (item) {return item.permDescription;});
-        foundGroup.getPermissions().then(function (groupPermissions) {
-          var groupPerms = groupPermissions.map(function (item) {return item.permDescription;});
-          User.findAll().then(function (foundAllUsers) {
-            var users = foundAllUsers.map(function (item) {return item.username;});
-            foundGroup.getUsers().then(function (foundUsers) {
-              var groupUsers = foundUsers.map(function (item) {return item.username;});
-              return res.render('manage/group', {
-                groupName: foundGroup.groupName,
-                groupDescription: foundGroup.groupDescription,
-                permissions: permissions,
-                groupPermissions: groupPerms,
-                users: users,
-                groupUsers: groupUsers
-              });
-          });
-          }, function (err) {return next(err);});
-        }, function (err) {return next(err);});
+      var find = [
+        Permission.findAll(),
+        foundGroup.getPermissions(),
+        User.findAll(),
+        foundGroup.getUsers()
+      ];
+      Promise.all(find).then(function (data) {
+        var permissions = data[0].map(function (item) {return item.permDescription;});
+        var groupPermissions = data[1].map(function (item) {return item.permDescription;});
+        var users = data[2].map(function (item) {return item.username;});
+        var groupUsers = data[3].map(function (item) {return item.username;});
+        return res.render('manage/group', {
+          groupName: foundGroup.groupName,
+          groupDescription: foundGroup.groupDescription,
+          permissions: permissions,
+          groupPermissions: groupPermissions,
+          users: users,
+          groupUsers: groupUsers
+        });
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
   })
@@ -80,6 +80,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     } else {
       Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
+        if (!foundGroup) {return res.send('group does not exist');}
         var updates = [];
         // permissions
         if (!req.body.permissions) {updates.push(foundGroup.setPermissions([]));} else {
