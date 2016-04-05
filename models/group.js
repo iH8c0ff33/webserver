@@ -13,4 +13,4 @@ module.exports = function (db, DataTypes) {
   });
   Group.sync();
   return Group;
-}
+};

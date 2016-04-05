@@ -8,4 +8,4 @@ module.exports = function (db, DataTypes) {
   });
   Permission.sync();
   return Permission;
-}
+};

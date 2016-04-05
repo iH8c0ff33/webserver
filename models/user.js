@@ -30,4 +30,4 @@ module.exports =  function (db, DataTypes) {
   });
   User.sync();
   return User;
-}
+};
