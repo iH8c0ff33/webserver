@@ -1,0 +1,47 @@
+extends /layouts/main
+block title
+  title Manage User: #{username}
+block content
+  div.container
+    div.row
+      div.card.col.s12
+        form(action='/manage/user/#{username}' method='POST')
+          div.card-content
+            span.card-title= username
+            div.row
+              div.input-field.col.s12
+                input#username.validate(type='text' name='username' required value='#{username}')
+                label(for='username') Username
+            div.row
+              div.input-field.col.s12.l6
+                input#firstName.validate(type='text' name='firstName' required value='#{firstName}')
+                label(for='firstName') First Name
+              div.input-field.col.s12.l6
+                input#lastName.validate(type='text' name='lastName' required value='#{lastName}')
+                label(for='lastName') Last Name
+            div.row
+              div.input-field.col.s12
+                input#email.validate(type='email' name='email' required value='#{email}')
+                label(for='email') Email
+            div.row
+              div.input-field.col.s12
+                select(multiple name='groups')
+                  option(value='' disabled selected) Select Groups
+                  each val in groups
+                    - if (userGroups.indexOf(val) > -1)
+                      option(value='#{val}' selected)= val
+                    - else
+                      option(value='#{val}')= val
+                label Groups
+            div.row
+              div.input-field.col.s12
+                select(multiple name='permissions')
+                  option(value='' disabled selected) Select Permissions
+                  each val in permissions
+                    - if (userPermissions.indexOf(val) > -1)
+                      option(value='#{val}' selected)= val
+                    - else
+                      option(value='#{val}')= val
+                label Permissions
+          div.card-action
+            button.btn(type='submit') Update
