@@ -36,7 +36,7 @@ block content
             div.row
               div.input-field.col.s12
                 select(multiple name='permissions')
-                  option(value='' disabled selected) Select Permissions
+                  option(value='' disabled selected) Select User Permissions
                   each val in permissions
                     - if (userPermissions.indexOf(val) > -1)
                       option(value='#{val}' selected)= val
