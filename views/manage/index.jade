@@ -36,11 +36,6 @@ block content
                       td: a(href='mailto:#{val.email}').green-text.truncate= val.email
                       td: a(href='/manage/reset/#{val.username}').orange-text RESET
                       td: a(href='javascript:void(0)' onclick='deleteUser("#{val.username}")').red-text DELETE
-            unless userMessage == ''
-              div.row
-                ul.collection
-                  each val in userMessage
-                    li.collection-item= val
             unless userError == ''
               div.row
                 ul.collection
@@ -63,11 +58,6 @@ block content
                       td: a(href='/manage/group/#{val.groupName}')= val.groupName
                       td= val.groupDescription
                       td: a(href='javascript:void(0)' onclick='deleteGroup("#{val.groupName}")').red-text DELETE
-            unless groupMessage == ''
-              div.row
-                ul.collection
-                  each val in groupMessage
-                    li.collection-item= val
             unless groupError == ''
               div.row
                 ul.collection

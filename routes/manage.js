@@ -3,22 +3,20 @@ var router = require('express').Router();
 var Promise = require('sequelize').Promise;
 module.exports = function (User, Group, Permission) {
   router.get('/', function (req, res, next) {
-    User.findAll().then(function (foundUsers) {
-      Group.findAll().then(function (foundGroups) {
-        Permission.findAll().then(function (foundPerms) {
-          res.render('manage/index', {
-            user: req.user,
-            users: foundUsers,
-            groups: foundGroups,
-            permissions: foundPerms,
-            userMessage: req.flash('user-message'),
-            userError: req.flash('user-error'),
-            groupMessage: req.flash('group-message'),
-            groupError: req.flash('group-error'),
-            permError: req.flash('permission-error')
-          });
-        }, function (err) {return next(err);});
-      }, function (err) {return next(err);});
+    Promise.all([
+      User.findAll(),
+      Group.findAll(),
+      Permissions.findAll()
+    ]).then(function (data) {
+      res.render('manage/index', {
+        user: req.user,
+        users: data[0],
+        groups: data[1],
+        permissions: data[2],
+        userError: req.flash('user-error'),
+        groupError: req.flash('group-error'),
+        permError: req.flash('permission-error')
+      });
     }, function (err) {return next(err);});
   });
   router.get('/user/:username', function (req, res, next) {
@@ -133,8 +131,7 @@ module.exports = function (User, Group, Permission) {
         Group.create({
           groupName: req.body.groupName,
           groupDescription: req.body.groupDescription
-        }).then(function (createdGroup) {
-          req.flash('group-message', 'Created group \''+createdGroup.groupName+'\'.');
+        }).then(function () {
           res.redirect('/manage#groups');
         }, function (err) {return next(err);});
       }, function (err) {return next(err);});
@@ -176,7 +173,6 @@ module.exports = function (User, Group, Permission) {
         return res.redirect(req.query.redirectTo);
       }
       foundGroup.destroy().then(function () {
-        req.flash('group-message', 'Group '+req.params.groupName+' deleted');
         return res.redirect(req.query.redirectTo);
       });
     }, function (err) {return next(err);});
