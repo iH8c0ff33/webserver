@@ -1,0 +1,22 @@
+var Promise = require('sequelize').Promise;
+module.exports = function (permissions) {
+  return function (req, res, next) {
+    Promise.all([
+      req.user.getPermissions(),
+      req.user.getGroups()
+    ]).then(function (data) {
+      var findUserGroupsPermissions = [];
+      data[1].forEach(function (group) {findUserGroupsPermissions.push(group.getPermissions());});
+      Promise.all(findUserGroupsPermissions).then(function (found) {
+        var userPermissions = data[0].map(function (item) {return item.permDescription;});
+        var userGroupsPermissions = [].concat.apply([], found).map(function (item) {return item.permDescription;});
+        permissions.forEach(function (check) {
+          if (userPermissions.indexOf(check) < 0 || userGroupsPermissions.indexOf(check) < 0) {
+            return res.send('not authorized');
+          }
+          return next();
+        });
+      }, function (err) {return next(err);});
+    }, function (err) {return next(err);});
+  };
+};

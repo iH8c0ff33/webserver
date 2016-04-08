@@ -19,23 +19,23 @@ block content
             div.row
               div.input-field.col.s12
                 select(multiple name='permissions')
-                  option(value='' disabled selected) Select Permissions
+                  option(value='' disabled selected) Select Group Permissions
                   each val in permissions
                     - if (groupPermissions.indexOf(val) > -1)
                       option(value='#{val}' selected)= val
                     - else
                       option(value='#{val}')= val
-                label Permissions
+                label Group Permissions
             div.row
               div.input-field.col.s12
                 select(multiple name='users')
-                  option(value='' disabled selected) Select Users
+                  option(value='' disabled selected) Select Group Users
                   each val in users
                     - if (groupUsers.indexOf(val) > -1)
                       option(value='#{val}' selected)= val
                     - else
                       option(value='#{val}')= val
-                label Users
+                label Group Users
           div.card-action
             button.btn(type='submit') Update
             

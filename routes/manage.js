@@ -1,12 +1,13 @@
 // Router for path '/manage'
 var router = require('express').Router();
 var Promise = require('sequelize').Promise;
+var checkPermissions = require(__dirname+'/../middleware/check-permission.js');
 module.exports = function (User, Group, Permission) {
-  router.get('/', function (req, res, next) {
+  router.get('/',checkPermissions(['manage']) , function (req, res, next) {
     Promise.all([
       User.findAll(),
       Group.findAll(),
-      Permissions.findAll()
+      Permission.findAll()
     ]).then(function (data) {
       res.render('manage/index', {
         user: req.user,
@@ -22,27 +23,32 @@ module.exports = function (User, Group, Permission) {
   router.get('/user/:username', function (req, res, next) {
     User.findOne({where: {username: req.params.username}}).then(function (foundUser) {
       if (!foundUser) {return res.send('not found');}
-      var find = [
+      Promise.all([
         Group.findAll(),
         foundUser.getGroups(),
         Permission.findAll(),
         foundUser.getPermissions()
-      ];
-      Promise.all(find).then(function (data) {
-        var groups = data[0].map(function (item) {return item.groupName;});
-        var userGroups = data[1].map(function (item) {return item.groupName;});
-        var permissions = data[2].map(function (item) {return item.permDescription;});
-        var userPermissions = data[3].map(function (item) {return item.permDescription;});
-        return res.render('manage/user', {
-          user: req.user,
-          username: foundUser.username,
-          firstName: foundUser.firstName,
-          lastName: foundUser.lastName,
-          email: foundUser.email,
-          groups: groups,
-          userGroups: userGroups,
-          permissions: permissions,
-          userPermissions: userPermissions
+      ]).then(function (data) {
+        var findUserGroupsPermissions = [];
+        data[1].forEach(function (group) {findUserGroupsPermissions.push(group.getPermissions());});
+        Promise.all(findUserGroupsPermissions).then(function (found) {
+          var groups = data[0].map(function (item) {return item.groupName;});
+          var userGroups = data[1].map(function (item) {return item.groupName;});
+          var permissions = data[2].map(function (item) {return item.permDescription;});
+          var userPermissions = data[3].map(function (item) {return item.permDescription;});
+          var userGroupsPermissions = [].concat.apply([], found).map(function (item) {return item.permDescription;});
+          return res.render('manage/user', {
+            user: req.user,
+            username: foundUser.username,
+            firstName: foundUser.firstName,
+            lastName: foundUser.lastName,
+            email: foundUser.email,
+            groups: groups,
+            userGroups: userGroups,
+            permissions: permissions,
+            userPermissions: userPermissions,
+            userGroupsPermissions: userGroupsPermissions
+          });
         });
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
