@@ -1,8 +1,8 @@
 // Router for path '/manage'
 var router = require('express').Router();
 var Promise = require('sequelize').Promise;
-var checkPermissions = require(__dirname+'/../middleware/check-permission.js');
 module.exports = function (User, Group, Permission) {
+  var checkPermissions = require(__dirname+'/../middleware/check-permission.js')(User);
   router.get('/',checkPermissions(['manage']) , function (req, res, next) {
     Promise.all([
       User.findAll(),
