@@ -6,5 +6,5 @@ WORKDIR /var/app
 
 EXPOSE 3000
 
-ENTRYPOINT ["npm", "install"]
-CMD ["node", "app.js"]
+ENTRYPOINT npm install
+CMD node app.js
