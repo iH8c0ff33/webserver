@@ -3,7 +3,8 @@ var router = require('express').Router();
 var Promise = require('sequelize').Promise;
 module.exports = function (User, Group, Permission) {
   var checkPermissions = require(__dirname+'/../middleware/check-permission.js')(User);
-  router.get('/',checkPermissions(['manage']) , function (req, res, next) {
+  var checkLoggedIn = require(__dirname+'/../middleware/check-logged-in.js');
+  router.get('/',checkLoggedIn , checkPermissions(['manage']) , function (req, res, next) {
     Promise.all([
       User.findAll(),
       Group.findAll(),
@@ -20,7 +21,7 @@ module.exports = function (User, Group, Permission) {
       });
     }, function (err) {return next(err);});
   });
-  router.get('/user/:username', function (req, res, next) {
+  router.get('/user/:username',checkLoggedIn , function (req, res, next) {
     User.findOne({where: {username: req.params.username}}).then(function (foundUser) {
       if (!foundUser) {return res.send('not found');}
       Promise.all([
@@ -53,7 +54,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
   });
-  router.post('/user/:username', function (req, res, next) {
+  router.post('/user/:username',checkLoggedIn , function (req, res, next) {
     User.findOne({where: {username: req.params.username}}).then(function (foundUser) {
       if (!foundUser) {return res.send('user does not exist');}
       var updates = [];
@@ -84,7 +85,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
   });
-  router.get('/user/:username/delete', function (req, res, next) {
+  router.get('/user/:username/delete',checkLoggedIn , function (req, res, next) {
     if (!req.query.redirectTo) {return res.send('Bad request');}
     User.findOne({where: {username: req.params.username}}).then(function (foundUser) {
       if (!foundUser) {
@@ -97,7 +98,7 @@ module.exports = function (User, Group, Permission) {
       });
     }, function (err) {return next(err);});
   });
-  router.get('/group/:groupName', function (req, res, next) {
+  router.get('/group/:groupName',checkLoggedIn , function (req, res, next) {
     Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
       if (!foundGroup) {return res.send('not found');}
       var find = [
@@ -123,7 +124,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
   });
-  router.post('/group/:groupName', function (req, res, next) {
+  router.post('/group/:groupName',checkLoggedIn , function (req, res, next) {
     if (req.query.new) {
       if (req.body.groupName.match(/[^\w]/g)) {
         req.flash('group-error', 'Group Name must match \\w');
@@ -171,7 +172,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     }
   });
-  router.get('/group/:groupName/delete', function (req, res, next) {
+  router.get('/group/:groupName/delete',checkLoggedIn , function (req, res, next) {
     if (!req.query.redirectTo) {return res.send('Bad request');}
     Group.findOne({where: {groupName: req.params.groupName}}).then(function (foundGroup) {
       if (!foundGroup) {
@@ -183,7 +184,7 @@ module.exports = function (User, Group, Permission) {
       });
     }, function (err) {return next(err);});
   });
-  router.post('/permission/:name', function (req, res, next) {
+  router.post('/permission/:name',checkLoggedIn , function (req, res, next) {
     Permission.find({where: {permDescription: req.body.permDescription}}).then(function (foundPerm) {
       if (foundPerm) {
         req.flash('permission-error', 'Permission '+req.body.permDescription+' already exists');
@@ -194,7 +195,7 @@ module.exports = function (User, Group, Permission) {
       }, function (err) {return next(err);});
     }, function (err) {return next(err);});
   });
-  router.get('/permission/:permDesc/delete', function (req, res, next) {
+  router.get('/permission/:permDesc/delete',checkLoggedIn , function (req, res, next) {
     if (!req.query.redirectTo) {return res.send('Bad request');}
     Permission.findOne({where: {permDescription: req.params.permDesc}}).then(function (foundPerm) {
       if (!foundPerm) {
