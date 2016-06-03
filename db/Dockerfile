@@ -8,7 +8,7 @@ RUN mkdir -p $DBPATH && \
 
 USER postgres
 RUN initdb -E UTF8 -D $DBPATH/data && \
-  postgres -D $DBPATH/data&sleep 1 && \
+  postgres -D $DBPATH/data& sleep 1 && \
   createuser www && \
   createdb -O www webserver && \
   killall postgres && \
