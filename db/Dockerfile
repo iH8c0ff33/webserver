@@ -2,7 +2,7 @@ FROM alpine
 
 ENV DBPATH 'var/lib/postgresql'
 
-RUN apk install --update postgresql
+RUN apk add --update postgresql
 RUN mkdir -p $DBPATH && \
   chown postgres:postgres $DBPATH
 
