@@ -1,7 +1,5 @@
 node:
   build: ./node
-  volumes:
-    - "/var/webserver/node:/var/app"
 db:
   build: ./db
 nginx:
