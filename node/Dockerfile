@@ -1,4 +1,5 @@
 FROM alpine
+MAINTAINER Daniele Monteleone <daniele.monteleone.it@gmail.com>
 
 RUN apk add --update nodejs; \
   mkdir -p /var/app
