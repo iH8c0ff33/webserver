@@ -1,4 +1,5 @@
 FROM alpine
+MAINTAINER Daniele Monteleone <daniele.monteleone.it@gmail.com>
 
 ENV DBPATH 'var/lib/postgresql'
 
