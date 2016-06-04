@@ -1,0 +1,8 @@
+node:
+  build: ./node
+  volumes:
+    - "/var/webserver:/var/app"
+db:
+  build: ./db
+nginx:
+  build: ./nginx
