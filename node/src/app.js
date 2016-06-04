@@ -12,7 +12,7 @@ app.use(favicon(__dirname+'/public/favicon.ico'));
 app.locals.basedir = __dirname+'/views';
 // Postgres connection
 var Sequelize = require('sequelize');
-var db = new Sequelize('postgres://www@webserver_db:5432/webserver');
+var db = new Sequelize('postgres://www@database:5432/webserver');
 var sessionStore = new SequelizeStore({db: db});
 sessionStore.sync();
 // Models

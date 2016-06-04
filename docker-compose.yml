@@ -3,7 +3,7 @@ version: '2'
 services:
   node:
     build: ./node
+    links:
+      - "db:database"
   db:
     build: ./db
-  nginx:
-    build: ./nginx
