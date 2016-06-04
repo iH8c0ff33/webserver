@@ -6,6 +6,6 @@ services:
     links:
       - "db:database"
     ports:
-      - 3000
+      - "2765:2765"
   db:
     build: ./db
