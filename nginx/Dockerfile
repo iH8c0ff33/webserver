@@ -1,5 +1,9 @@
-FROM sickp/alpine-nginx
+FROM alpine
 
-ADD proxy.conf /etc/nginx/nginx.conf
+RUN echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> \
+  /etc/apk/repositories && \
+  apk add --update nginx
 
-CMD nginx -g 'daemon off;'
+ADD proxy.conf /etc/nginx/conf.d/proxy.conf
+
+CMD sh
