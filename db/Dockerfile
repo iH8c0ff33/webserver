@@ -1,15 +1,15 @@
 FROM alpine
 MAINTAINER Daniele Monteleone <daniele.monteleone.it@gmail.com>
 
-ENV DBPATH 'var/lib/postgresql'
+ENV DBPATH '/var/lib/postgresql'
 
-RUN apk add --update postgresql
-RUN mkdir -p $DBPATH && \
+RUN apk add --update postgresql && \
+  mkdir -p $DBPATH && \
   chown postgres:postgres $DBPATH
 
 USER postgres
 RUN initdb -E UTF8 -D $DBPATH/data && \
-  pg_ctl start -D $DBPATH/data&& \
+  pg_ctl start -D $DBPATH/data && \
   sleep 1 && \
   createuser www && \
   createdb -O www webserver && \
