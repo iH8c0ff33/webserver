@@ -5,6 +5,7 @@ services:
     build: ./node
     links:
       - "db:database"
-    ports: 3000
+    ports:
+      - 3000
   db:
     build: ./db
