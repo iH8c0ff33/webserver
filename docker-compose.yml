@@ -1,8 +1,9 @@
 version: '2'
 
-node:
-  build: ./node
-db:
-  build: ./db
-nginx:
-  build: ./nginx
+services:
+  node:
+    build: ./node
+  db:
+    build: ./db
+  nginx:
+    build: ./nginx
