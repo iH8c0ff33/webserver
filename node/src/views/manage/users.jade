@@ -1,39 +1,39 @@
 extends /layouts/main
 block title
-  title Manage Users
+    title Manage Users
 block content
-  div(class='container')
-    div(class='row')
-      div(class='col s12')
-        ul(class='tabs')
-          li(class='tab col s4')
-            a(href='#users') Users
-          li(class='tab col s4')
-            a(href='#groups') Groups
-          li(class='tab col s4')
-            a(href='#permissions') Permissions
-    div(class='row card')
-      div(id='users' class='col s12')
-        table(class='responsive-table')
-          thead
-            tr
-              th Username
-              th First Name
-              th Last Name
-              th Email
-              th Created At
-              th Reset Password
-          tbody
-            each val in users
-              tr
-                td= val.username
-                td= val.firstName
-                td= val.lastName
-                td= val.email
-                td= val.createdAt
-                td: a(href='/manage/reset/#{val.username}')
-                td: a(href='/manage/delete/#{val.username}')
-      div(id='groups' class='col s12')
-        |groups
-      div(id='permissions' class='col s12')
-        |permissions
+    div(class='container')
+        div(class='row')
+            div(class='col s12')
+                ul(class='tabs')
+                    li(class='tab col s4')
+                        a(href='#users') Users
+                    li(class='tab col s4')
+                        a(href='#groups') Groups
+                    li(class='tab col s4')
+                        a(href='#permissions') Permissions
+        div(class='row card')
+            div(id='users' class='col s12')
+                table(class='responsive-table')
+                    thead
+                        tr
+                            th Username
+                            th First Name
+                            th Last Name
+                            th Email
+                            th Created At
+                            th Reset Password
+                    tbody
+                        each val in users
+                            tr
+                                td= val.username
+                                td= val.firstName
+                                td= val.lastName
+                                td= val.email
+                                td= val.createdAt
+                                td: a(href='/manage/reset/#{val.username}')
+                                td: a(href='/manage/delete/#{val.username}')
+            div(id='groups' class='col s12')
+                |groups
+            div(id='permissions' class='col s12')
+                |permissions

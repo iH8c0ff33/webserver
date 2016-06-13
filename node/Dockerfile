@@ -2,13 +2,13 @@ FROM alpine
 MAINTAINER Daniele Monteleone <daniele.monteleone.it@gmail.com>
 
 RUN apk add --update nodejs && \
-  mkdir -p /tmp/node
+    mkdir -p /tmp/node
 ADD package.json /tmp/node/package.json
 RUN cd /tmp/node && \
-  npm install
+    npm install
 RUN mkdir -p /src && \
-  cp -a /tmp/node/node_modules /src/ && \
-  rm -rf /tmp/node
+    cp -a /tmp/node/node_modules /src/ && \
+    rm -rf /tmp/node
 
 WORKDIR /src
 ADD src /src
