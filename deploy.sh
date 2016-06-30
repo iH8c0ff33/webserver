@@ -2,8 +2,6 @@
 git pull
 docker build -t webserver_node_image ./node
 docker build -t webserver_db_image ./db
-docker network inspect webserver || \
-    docker network create webserver
 docker inspect webserver_db && \
     docker kill webserver_db && \
     docker rm webserver_db
