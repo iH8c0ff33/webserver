@@ -6,8 +6,8 @@ docker build -t webserver_db_image ./db || \
     echo "ERR: db build failed" && \
     exit 1
 docker inspect webserver_db &> /dev/null && \
-    echo "webserver_db seems to be already stopped" && \
-    docker kill webserver_db && docker rm webserver_db
+    docker kill webserver_db && docker rm webserver_db || \
+    echo "webserver_db seems to be already stopped"
 docker create \
     --restart always \
     -i -t \
@@ -15,8 +15,8 @@ docker create \
     --name webserver_db \
     webserver_db_image
 docker inspect webserver_node &> /dev/null && \
-    echo "webserver_node seems to be already stopped" && \
-    docker kill webserver_node && docker rm webserver_node
+    docker kill webserver_node && docker rm webserver_node || \
+    echo "webserver_node seems to be already stopped"
 docker create \
     --restart always \
     -i -t \
