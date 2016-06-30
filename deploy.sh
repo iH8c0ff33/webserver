@@ -1,4 +1,5 @@
 #!/bin/bash
+git pull
 docker build -t webserver_node_image ./node
 docker build -t webserver_db_image ./db
 docker inspect webserver_db && \
