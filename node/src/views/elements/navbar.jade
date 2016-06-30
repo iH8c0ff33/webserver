@@ -1,4 +1,5 @@
 ul(id='user-dropdown' class='dropdown-content')
+<<<<<<< HEAD
     li
         a(href='/user/account') My Account
     li(class='divider')
@@ -51,3 +52,57 @@ nav(class='grey darken-3')
                     a(href='/signup') Sign Up
         a(href='#', data-activates='mobile-nav', class='button-collapse')
             i(class='material-icons') menu
+=======
+  li
+    a(href='/user/account') My Account
+  li(class='divider')
+  li
+    a(href='/manage') Manage
+  li(class='divider')
+  li
+    a(href='/logout') Logout
+if user 
+  ul(id='mobile-user-dropdown' class='dropdown-content')
+    li()
+      a= user.username
+    li(class='divider')
+    li
+      a(href='/user/account') Account
+    li(class='divider')
+    li
+      a(href='/manage') Manage
+    li(class='divider')
+    li
+      a(href='/logout') Logout
+nav(class='grey darken-3')
+  div(class='nav-wrapper container')
+    a(href='/', class='brand-logo') Homeserver
+    ul(class='right hide-on-med-and-down')
+      unless user
+        li
+          a(href='/login') Login
+        li
+          a(href='/signup') Sign Up
+      if user
+        li
+          a(href='#' class='dropdown-button' data-activates='user-dropdown')= user.username
+            i(class='material-icons left') account_circle
+            i(class='material-icons right') arrow_drop_down
+    if user
+      ul(class='right hide-on-large-only')
+        li
+          a(href='#' class='dropdown-button' data-activates='mobile-user-dropdown')
+            i(class='material-icons') account_circle
+    ul(class='side-nav' id='mobile-nav')
+      li
+        i(class='material-icons black-text left') home
+        a(href='/') Home
+      li(class='divider')
+      unless user
+        li
+          a(href='/login') Login
+        li
+          a(href='/signup') Sign Up
+    a(href='#', data-activates='mobile-nav', class='button-collapse')
+      i(class='material-icons') menu
+>>>>>>> b7f1cd8cfd2e050f01f341f5b9eb91591821da7b

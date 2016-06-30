@@ -1,5 +1,6 @@
 extends /layouts/main
 block title
+<<<<<<< HEAD
     title Sign Up
 block content
     div.container
@@ -49,3 +50,54 @@ block pagescript
             if ($('#username').val().match(/[^\w]/g)) {Materialize.toast('You can only enter [a-zA-Z0-9_]', 4000);}
             $('#username').val($('#username').val().replace(/[^\w]/gi, ''));
         }
+=======
+  title Sign Up
+block content
+  div.container
+    div.card
+      form(onsubmit='return validate();' action='/signup' method='POST')
+        div.card-content
+          span.card-title Sign Up
+          div.row
+            div.input-field.col.s12
+              input#username.validate(type='text' name='username' length='50' required='' oninput='filterForm()')
+              label(for='username') Username
+          div.row
+            div.input-field.col.s6
+              input#first_name.validate(type='text' name='first_name' length='50' required='')
+              label(for='first_name') First Name
+            div.input-field.col.s6
+              input#last_name.validate(type='text' name='last_name' length='50' required='')
+              label(for='last_name') Last Name
+          div.row
+            div.input-field.col.s12
+              input#email.validate(type='email' name='email' length='255' required='')
+              label(for='email') Email
+          div.row
+            div.input-field.col.s12
+              input#password.validate(type='password' name='password' length='255' required ='')
+              label(for='password') Password
+          unless error == ''
+            ul.collection
+              each val in error
+                li.collection-item.red-text= val
+        div.card-action
+          button.btn.validate(type='submit') Sign Up
+block pagescript
+  script.
+    function validate() {
+      var username = $('#username').val();
+      var first_name = $('#first_name').val();
+      var last_name = $('#last_name').val();
+      var email = $('#email').val();
+      var password = $('#password').val();
+      var error = false;
+      if (username.length > 50 || first_name.length > 50 || last_name.legth > 50 || email.length > 255 || password.length > 255) {
+        return false;
+      }
+    }
+    function filterForm() {
+      if ($('#username').val().match(/[^\w]/g)) {Materialize.toast('You can only enter [a-zA-Z0-9_]', 4000);}
+      $('#username').val($('#username').val().replace(/[^\w]/gi, ''));
+    }
+>>>>>>> b7f1cd8cfd2e050f01f341f5b9eb91591821da7b

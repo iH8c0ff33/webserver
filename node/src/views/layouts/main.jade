@@ -1,5 +1,6 @@
 extends materialize
 block head
+<<<<<<< HEAD
     include /styles/main
     block style
 block body
@@ -18,3 +19,23 @@ block body
                 $('select').material_select();
             });
         block pagescript
+=======
+  include /styles/main
+  block style
+block body
+  header(style='padding-bottom: 2em;')
+    block navbar
+      include /elements/navbar
+    block header
+  main
+    block content
+  block footer
+    include /elements/footer
+  block scripts
+    script(type='text/javascript').
+      jQuery(document).ready(function (){
+        $('.button-collapse').sideNav();
+        $('select').material_select();
+      });
+    block pagescript
+>>>>>>> b7f1cd8cfd2e050f01f341f5b9eb91591821da7b
