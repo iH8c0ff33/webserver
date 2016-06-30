@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 docker build -t webserver_node_image ./node || \
     echo " ERR: node build failed" && \
     exit 1
