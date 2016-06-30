@@ -1,10 +1,10 @@
 #!/bin/bash
 docker build -t webserver_node_image ./node || \
-    echo " ERR: node build failed" && \
-    exit 1
+    (echo " ERR: node build failed" && \
+    exit 1)
 docker build -t webserver_db_image ./db || \
-    echo "ERR: db build failed" && \
-    exit 1
+    (echo "ERR: db build failed" && \
+    exit 1)
 docker inspect webserver_db &> /dev/null && \
     docker kill webserver_db && docker rm webserver_db || \
     echo "webserver_db seems to be already stopped"
