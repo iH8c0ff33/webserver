@@ -1,7 +1,7 @@
 FROM alpine
 MAINTAINER Daniele Monteleone <daniele.monteleone.it@gmail.com>
 
-RUN apk add --update nodejs && \\
+RUN apk add --update nodejs && \
     mkdir -p /tmp/node
 ADD package.json /tmp/node/package.json
 RUN cd /tmp/node && \
