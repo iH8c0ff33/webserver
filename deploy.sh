@@ -1,6 +1,6 @@
 #!/bin/bash
-docker build -t webserver_node_image ./node
-docker build -t webserver_db_image ./db
+docker build -t webserver_node_image /var/webserver/node
+docker build -t webserver_db_image /var/webserver/db
 docker inspect webserver_db && \
     docker kill webserver_db && \
     docker rm webserver_db
