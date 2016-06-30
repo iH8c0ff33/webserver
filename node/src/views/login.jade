@@ -1,6 +1,5 @@
 extends /layouts/main
 block title
-<<<<<<< HEAD
     title Login
 block content
     div(class='container')
@@ -22,26 +21,3 @@ block content
                                 li(class='collection-item red-text')= val
                 div(class='card-action')
                     button(class='btn' type='submit') Login
-=======
-  title Login
-block content
-  div(class='container')
-    div(class='card')
-      form(action='/login' method='POST')
-        div(class='card-content')
-          span(class='card-title') Login
-          div(class='row')
-            div(class='input-field col s12')
-              input(type='text' name='username' id='username' required='' class='validate')
-              label(for='username') Username
-          div(class='row')
-            div(class='input-field col s12')
-              input(type='password' name='password' id='password' required='' class='validate')
-              label(for='password') Password
-          unless error == ''
-            ul(class='collection')
-              each val in error
-                li(class='collection-item red-text')= val
-        div(class='card-action')
-          button(class='btn' type='submit') Login
->>>>>>> b7f1cd8cfd2e050f01f341f5b9eb91591821da7b

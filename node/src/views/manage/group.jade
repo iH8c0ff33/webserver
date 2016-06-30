@@ -1,6 +1,5 @@
 extends /layouts/main
 block title
-<<<<<<< HEAD
     title Manage Group: #{groupName}
 block content
     div.container
@@ -39,44 +38,3 @@ block content
                                 label Group Users
                     div.card-action
                         button.btn(type='submit') Update
-=======
-  title Manage Group: #{groupName}
-block content
-  div.container
-    div.row
-      div.card.col.s12
-        form(action='/manage/group/#{groupName}' method='POST')
-          div.card-content
-            span.card-title= groupName
-            div.row
-              div.input-field.col.s12
-                input#groupName.validate(type='text' name='groupName' required value='#{groupName}')
-                label(for='groupName') Name
-            div.row
-              div.input-field.col.s12
-                input#groupDescription.validate(type='text' name='groupDescription' required value='#{groupDescription}')
-                label(for='groupDescription') Description
-            div.row
-              div.input-field.col.s12
-                select(multiple name='permissions')
-                  option(value='' disabled selected) Select Group Permissions
-                  each val in permissions
-                    - if (groupPermissions.indexOf(val) > -1)
-                      option(value='#{val}' selected)= val
-                    - else
-                      option(value='#{val}')= val
-                label Group Permissions
-            div.row
-              div.input-field.col.s12
-                select(multiple name='users')
-                  option(value='' disabled selected) Select Group Users
-                  each val in users
-                    - if (groupUsers.indexOf(val) > -1)
-                      option(value='#{val}' selected)= val
-                    - else
-                      option(value='#{val}')= val
-                label Group Users
-          div.card-action
-            button.btn(type='submit') Update
-            
->>>>>>> b7f1cd8cfd2e050f01f341f5b9eb91591821da7b
