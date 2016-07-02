@@ -13,6 +13,6 @@ RUN mkdir -p /src && \
 WORKDIR /src
 ADD src /src
 
-EXPOSE 3000
+EXPOSE 2765
 
 CMD node /src/app.js
