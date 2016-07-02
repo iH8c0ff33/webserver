@@ -11,7 +11,6 @@ docker inspect webserver_db &> /dev/null && \
 docker create \
     --restart always \
     -i -t \
-    --net webserver \
     --name webserver_db \
     webserver_db_image
 docker inspect webserver_node &> /dev/null && \
@@ -20,7 +19,6 @@ docker inspect webserver_node &> /dev/null && \
 docker create \
     --restart always \
     -i -t \
-    --net webserver \
     --name webserver_node \
     --link webserver_db:database \
     -p 2765:2765 \
