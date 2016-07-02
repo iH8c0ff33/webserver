@@ -5,7 +5,7 @@ module.exports = function(User) {
             return done(null, foundUser);
         }, function(err) {
             return done(err);
-        })
+        });
     };
     return deserialize;
-}
+};

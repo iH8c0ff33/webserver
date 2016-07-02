@@ -23,6 +23,7 @@ docker create \
     --net webserver \
     --name webserver_node \
     --link webserver_db:database \
+    -p 3000:3000 \
     webserver_node_image
 docker start webserver_db
 docker start webserver_node
