@@ -1,8 +1,8 @@
 #!/bin/bash
-docker build -t webserver_node_image ./node || \
+docker build -t webserver_node_image /var/src/webserver/node || \
     (echo " ERR: node build failed" && \
     exit 1)
-docker build -t webserver_db_image ./db || \
+docker build -t webserver_db_image /var/src/webserver/db || \
     (echo "ERR: db build failed" && \
     exit 1)
 docker inspect webserver_db &> /dev/null && \

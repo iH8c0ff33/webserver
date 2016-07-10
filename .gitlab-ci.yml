@@ -1,0 +1,27 @@
+image: docker:latest
+
+services:
+    - docker:dind
+
+before_script:
+    - docker info
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t test ./db
+    - docker build -t test ./node
+
+deploy:
+  stage: deploy
+  script:
+    - which git || apk add --update git
+    - which ssh-agent || apk add --update openssh
+    - eval $(ssh-agent -s)
+    - chmod 700 ./ssh && chmod 600 ./ssh/*
+    - mv ./ssh ~/.ssh && ssh-add
+    - git push git@172.17.0.1:webserver.git HEAD:master
